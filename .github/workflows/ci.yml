@@ -24,12 +24,5 @@ jobs:
           pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Iniciar a API em background
-        run: |
-          uvicorn main:app &
-          sleep 3
-
-      - name: Verificar que a API responde
-        run: |
-          curl --fail http://localhost:8000/
-          echo "API respondeu com sucesso"
+      - name: Rodar testes
+        run: pytest tests/ -v --tb=short
