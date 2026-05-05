@@ -4,7 +4,7 @@ from fastapi.exceptions import RequestValidationError
 
 # Importando as configurações e as rotas
 from config import settings
-from routers import pratos, pedidos, reservas
+from routers import pratos, pedidos, reservas, predict
 
 app = FastAPI(
     title=settings.app_name,
@@ -16,6 +16,7 @@ app = FastAPI(
 app.include_router(pratos.router)
 app.include_router(pedidos.router)
 app.include_router(reservas.router)
+app.include_router(predict.router, prefix="/ml", tags=["ML"])
 
 @app.get("/", tags=["Home"])
 async def root():

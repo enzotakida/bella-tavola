@@ -24,5 +24,10 @@ jobs:
           pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Rodar testes
+      - name: Rodar testes smoke (pull request)
+        if: github.event_name == 'pull_request'
+        run: python -m pytest tests/ -v --tb=short -m smoke
+
+      - name: Rodar todos os testes (push para main)
+        if: github.event_name == 'push'
         run: python -m pytest tests/ -v --tb=short
