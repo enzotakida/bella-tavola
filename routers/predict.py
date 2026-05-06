@@ -14,6 +14,7 @@ def get_model():
     global _model
     if _model is None:
         from model_utils import load_model
+
         _model = load_model(REPO_ID, FILENAME)
     return _model
 
@@ -48,13 +49,17 @@ def _confidence_label(probability: float) -> str:
 async def predict(input: PredictInput):
     model = get_model()
 
-    features = np.array([[
-        input.renda_mensal,
-        input.divida_atual,
-        input.score_pagamento,
-        input.idade,
-        input.num_dependentes
-    ]])
+    features = np.array(
+        [
+            [
+                input.renda_mensal,
+                input.divida_atual,
+                input.score_pagamento,
+                input.idade,
+                input.num_dependentes,
+            ]
+        ]
+    )
 
     prediction = int(model.predict(features)[0])
     probability = float(model.predict_proba(features)[0][1])
@@ -64,7 +69,7 @@ async def predict(input: PredictInput):
         probability=round(probability, 4),
         label="INADIMPLENTE" if prediction == 1 else "BOM PAGADOR",
         model_version=REPO_ID,
-        confidence=_confidence_label(probability)
+        confidence=_confidence_label(probability),
     )
 
 
@@ -76,7 +81,12 @@ async def health():
         body = {"api": "ok", "model": "ok", "model_repo": REPO_ID, "detail": None}
         status_code = 200
     except Exception as e:
-        body = {"api": "ok", "model": "degraded", "model_repo": REPO_ID, "detail": str(e)}
+        body = {
+            "api": "ok",
+            "model": "degraded",
+            "model_repo": REPO_ID,
+            "detail": str(e),
+        }
         status_code = 503
 
     return JSONResponse(content=body, status_code=status_code)

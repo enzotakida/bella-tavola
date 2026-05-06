@@ -9,3 +9,5 @@ joblib
 huggingface_hub
 numpy
 pandas
+black
+autoflake

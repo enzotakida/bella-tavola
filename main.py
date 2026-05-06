@@ -7,9 +7,7 @@ from config import settings
 from routers import pratos, pedidos, reservas, predict
 
 app = FastAPI(
-    title=settings.app_name,
-    description=settings.description,
-    version=settings.version
+    title=settings.app_name, description=settings.description, version=settings.version
 )
 
 # Registrando os departamentos (routers) no app principal
@@ -18,6 +16,7 @@ app.include_router(pedidos.router)
 app.include_router(reservas.router)
 app.include_router(predict.router, prefix="/ml", tags=["ML"])
 
+
 @app.get("/", tags=["Home"])
 async def root():
     return {
@@ -25,8 +24,9 @@ async def root():
         "mensagem": "Bem-vindo à nossa API",
         "chef": settings.chef,
         "cidade": "São Paulo",
-        "especialidade": "Massas artesanais"
+        "especialidade": "Massas artesanais",
     }
+
 
 # Handlers de Exceção Globais
 @app.exception_handler(RequestValidationError)
@@ -40,12 +40,13 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
             "detalhes": [
                 {
                     "campo": " -> ".join(str(loc) for loc in e["loc"]),
-                    "mensagem": e["msg"]
+                    "mensagem": e["msg"],
                 }
                 for e in exc.errors()
-            ]
-        }
+            ],
+        },
     )
+
 
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException):
@@ -55,7 +56,6 @@ async def http_exception_handler(request: Request, exc: HTTPException):
             "erro": exc.detail,
             "status": exc.status_code,
             "path": str(request.url),
-            "detalhes": []
-        }
+            "detalhes": [],
+        },
     )
-    

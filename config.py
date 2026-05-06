@@ -1,5 +1,6 @@
 from pydantic_settings import BaseSettings
 
+
 class Settings(BaseSettings):
     app_name: str = "Bella Tavola API"
     description: str = "API do restaurante Bella Tavola"
@@ -8,5 +9,6 @@ class Settings(BaseSettings):
     debug: bool = False
     max_mesas: int = 20
     max_pessoas_por_mesa: int = 10
+
 
 settings = Settings()

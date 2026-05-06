@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field, field_validator
 from typing import Optional
 
+
 class PratoInput(BaseModel):
     nome: str = Field(min_length=3, max_length=100)
     categoria: str = Field(pattern="^(pizza|massa|sobremesa|entrada|salada)$")
@@ -28,6 +29,7 @@ class PratoInput(BaseModel):
 
         return v
 
+
 class PratoOutput(BaseModel):
     id: int
     nome: str
@@ -36,6 +38,7 @@ class PratoOutput(BaseModel):
     descricao: Optional[str]
     disponivel: bool
     criado_em: str
+
 
 class DisponibilidadeInput(BaseModel):
     disponivel: bool

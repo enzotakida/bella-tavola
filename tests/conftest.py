@@ -15,5 +15,5 @@ def prato_valido():
         "nome": "Prato de Fixture",
         "categoria": "massa",
         "preco": 45.0,
-        "disponivel": True
+        "disponivel": True,
     }
