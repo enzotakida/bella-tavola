@@ -9,3 +9,4 @@ build/
 .venv/
 env_ci_test/
 .pytest_cache/
+.claude/
