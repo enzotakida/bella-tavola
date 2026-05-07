@@ -8,11 +8,12 @@ on:
 
 jobs:
   # ─────────────────────────────────────────────
-  # JOB 1: testes-smoke
+  # JOB 1: qualidade
   # Roda em todo push e PR — feedback rápido.
+  # Verifica formatação, imports e testes smoke.
   # Não depende de secrets nem de recursos externos.
   # ─────────────────────────────────────────────
-  testes-smoke:
+  qualidade:
     runs-on: ubuntu-latest
 
     steps:
@@ -29,18 +30,34 @@ jobs:
           pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Diagnóstico do ambiente
+        run: |
+          echo "=== Python ==="
+          python --version
+          echo "=== Arquivos do projeto ==="
+          test -f main.py          && echo "✔ main.py"          || echo "✘ main.py ausente"
+          test -f requirements.txt && echo "✔ requirements.txt" || echo "✘ requirements.txt ausente"
+          test -d tests/           && echo "✔ tests/"           || echo "✘ tests/ ausente"
+          test -f model_utils.py   && echo "✔ model_utils.py"   || echo "✘ model_utils.py ausente"
+
+      - name: Verificar formatação
+        run: black --check .
+
+      - name: Verificar imports não utilizados
+        run: autoflake --check --remove-all-unused-imports -r .
+
       - name: Rodar testes smoke
         run: python -m pytest tests/ -m smoke -v --tb=short
 
   # ─────────────────────────────────────────────
-  # JOB 2: testes-integracao
-  # Roda apenas em push para main, depois do smoke passar.
+  # JOB 2: integracao
+  # Roda apenas em push para main, depois de qualidade passar.
   # Secrets não estão disponíveis em PRs de forks externos —
   # por isso este job é restrito a pushes diretos.
   # ─────────────────────────────────────────────
-  testes-integracao:
+  integracao:
     runs-on: ubuntu-latest
-    needs: testes-smoke
+    needs: qualidade
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     steps:
@@ -92,3 +109,29 @@ jobs:
         run: python -m pytest tests/ -m integracao -v --tb=short
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
+
+  # ─────────────────────────────────────────────
+  # JOB 3: relatorio
+  # Roda após integração passar — resume o pipeline.
+  # Ponto de extensão para deploy ou notificações futuras.
+  # ─────────────────────────────────────────────
+  relatorio:
+    runs-on: ubuntu-latest
+    needs: integracao
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Baixar o código
+        uses: actions/checkout@v4
+
+      - name: Resumo do pipeline
+        run: |
+          echo "================================================"
+          echo "  Pipeline CI do Bella Tavola concluído ✔"
+          echo "================================================"
+          echo "  Branch:  ${{ github.ref_name }}"
+          echo "  Commit:  ${{ github.sha }}"
+          echo "  Autor:   ${{ github.actor }}"
+          echo "================================================"
+          echo "  Qualidade ✔ | Integração ✔ | Relatório ✔"
+          echo "================================================"
