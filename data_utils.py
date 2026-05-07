@@ -24,32 +24,32 @@ def gerar_dataset(
 
     renda_mensal = np.where(
         inadimplente,
-        rng.uniform(800, 3000, n_samples),
-        rng.uniform(3000, 15000, n_samples),
+        rng.uniform(1000, 9000, n_samples),
+        rng.uniform(2000, 12000, n_samples),
     ).round(2)
 
     divida_atual = np.where(
         inadimplente,
-        rng.uniform(5000, 50000, n_samples),
-        rng.uniform(0, 8000, n_samples),
+        rng.uniform(2000, 35000, n_samples),
+        rng.uniform(0, 20000, n_samples),
     ).round(2)
 
     score_pagamento = np.where(
         inadimplente,
-        rng.integers(0, 45, n_samples),
-        rng.integers(55, 101, n_samples),
+        rng.integers(20, 75, n_samples),
+        rng.integers(40, 101, n_samples),
     )
 
     idade = np.where(
         inadimplente,
-        rng.integers(18, 35, n_samples),
-        rng.integers(30, 65, n_samples),
+        rng.integers(18, 60, n_samples),
+        rng.integers(22, 65, n_samples),
     )
 
     num_dependentes = np.where(
         inadimplente,
-        rng.integers(2, 6, n_samples),
-        rng.integers(0, 3, n_samples),
+        rng.integers(1, 6, n_samples),
+        rng.integers(0, 5, n_samples),
     )
 
     df = pd.DataFrame(
