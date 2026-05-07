@@ -44,7 +44,9 @@ def treinar():
     )
     print("\nMétricas no conjunto de teste:")
     print(
-        classification_report(y_test, y_pred, target_names=["Bom Pagador", "Inadimplente"])
+        classification_report(
+            y_test, y_pred, target_names=["Bom Pagador", "Inadimplente"]
+        )
     )
 
     importancias = sorted(
@@ -167,7 +169,9 @@ prediction = model.predict(features)
 def publicar():
     token = os.environ.get("HF_TOKEN")
     if not token:
-        raise EnvironmentError("Defina a variável de ambiente HF_TOKEN antes de publicar.")
+        raise EnvironmentError(
+            "Defina a variável de ambiente HF_TOKEN antes de publicar."
+        )
 
     login(token=token)
     api = HfApi()
