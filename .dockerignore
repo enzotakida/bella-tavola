@@ -1,0 +1,34 @@
+# Bytecode Python — gerado automaticamente, desnecessário na imagem
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+
+# Controle de versão — histórico não pertence à imagem
+.git
+.gitignore
+
+# Secrets — nunca devem entrar na imagem
+.env
+*.env
+
+# Ambientes virtuais — centenas de MB desnecessários
+env_ci_test/
+venv/
+.venv/
+
+# Artefatos de ML — baixados do Hub em runtime
+*.pkl
+*.joblib
+
+# Testes — não pertencem à imagem de produção
+tests/
+pytest.ini
+.pytest_cache/
+
+# Cadernos Jupyter — não pertencem à imagem
+*.ipynb
+.ipynb_checkpoints/
+
+# O próprio dockerignore (convenção)
+.dockerignore

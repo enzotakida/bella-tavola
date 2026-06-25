@@ -21,7 +21,7 @@ app.include_router(predict.router, prefix="/ml", tags=["ML"])
 async def root():
     return {
         "restaurante": "Bella Tavola",
-        "mensagem": "Olá do contêiner!!!",
+        "mensagem": "Testando hot reload!!!",
         "chef": settings.chef,
         "cidade": "São Paulo",
         "especialidade": "Massas artesanais",
